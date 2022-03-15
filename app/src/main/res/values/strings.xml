@@ -1,5 +1,29 @@
 <resources>
     <string name="app_name">QR Marker</string>
-    <string name="password">Password</string>
     <string name="log_in">Log In</string>
+    <string name="nothing_to_see_here">Nothing to see here.</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_name">Enter name</string>
+    <string name="create_organization">Create Organization</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="enter_name_of_organization">Enter the name of the organization</string>
+    <string name="create_room">Create Room</string>
+    <string name="enter_name_of_room">Enter the name of the room</string>
+    <string name="loading">Loading…</string>
+    <string name="empty_field_error">Field can not be empty.</string>
+    <string name="created_successfully">Created successfully.</string>
+    <string name="creation_failed">Creation failed because an error occurred.</string>
+    <string name="deleted_successfully">Deleted successfully.</string>
+    <string name="deletion_failed">Deletion failed because an error occurred.</string>
+    <string name="delete_org">Delete Organization</string>
+    <string name="delete_org_confirm">Are you sure you want to delete this organization?</string>
+    <string name="delete_room">Delete Room</string>
+    <string name="delete_room_confirm">Are you sure you want to delete this room?</string>
+    <string name="something_went_wrong_please_drag_this_page_down_to_refresh">Something went wrong. Please drag this page down to refresh.</string>
+    <string name="scan_error_message">An error occurred while trying to scan.</string>
+    <string name="camera_permission_required">Camera permission required.</string>
+    <string name="camera_hardware_required">Camera hardware required.</string>
 </resources>
