@@ -4,10 +4,22 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.17239583333333333" />
+        <entry key="app/src/main/res/drawable/add.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/back.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/black_solid_white_stroke_curved_edges.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/delete.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/divider.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/rotating_dialog.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/white_solid_curved_edges.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/white_solid_grey_stroke.xml" value="0.1795" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/activity_organizations.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/activity_room_details.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/activity_rooms.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_scanner.xml" value="0.14583333333333334" />
+        <entry key="app/src/main/res/layout/add_item.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/list_layout.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/loading.xml" value="0.19610507246376813" />
       </map>
     </option>
   </component>

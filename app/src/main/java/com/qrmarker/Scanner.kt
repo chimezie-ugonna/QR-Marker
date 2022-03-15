@@ -1,8 +1,10 @@
 package com.qrmarker
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -16,24 +18,27 @@ class Scanner : AppCompatActivity() {
         val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
 
         codeScanner = CodeScanner(this, scannerView)
-
-        // Parameters (default values)
-        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
-        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-        // ex. listOf(BarcodeFormat.QR_CODE)
-        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
-        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
-        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
-        codeScanner.isFlashEnabled = true // Whether to enable flash or not
+        codeScanner.camera = CodeScanner.CAMERA_BACK
+        codeScanner.formats = CodeScanner.ALL_FORMATS
+        codeScanner.autoFocusMode = AutoFocusMode.SAFE
+        codeScanner.scanMode = ScanMode.CONTINUOUS
+        codeScanner.isAutoFocusEnabled = true
+        codeScanner.isFlashEnabled = false
 
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
-                Toast.makeText(this, "Scan Result: ${it.text}", Toast.LENGTH_LONG).show()
+                val i = Intent(this, RoomDetails::class.java)
+                i.putExtra("value", it.text)
+                startActivity(i)
             }
         }
         codeScanner.errorCallback = ErrorCallback {
             runOnUiThread {
-                Toast.makeText(this, "Scan Error Message: ${it.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.scan_error_message),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
@@ -53,8 +58,16 @@ class Scanner : AppCompatActivity() {
                     codeScanner.startPreview()
                 }
             } else {
-                Toast.makeText(this, "Camera hardware required.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.camera_hardware_required),
+                    Toast.LENGTH_LONG
+                ).show()
             }
+        }
+
+        findViewById<ImageView>(R.id.organizations).setOnClickListener {
+            startActivity(Intent(this, Organizations::class.java))
         }
     }
 
@@ -68,7 +81,11 @@ class Scanner : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 codeScanner.startPreview()
             } else {
-                Toast.makeText(this, "Camera permission required.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.camera_permission_required),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -90,7 +107,11 @@ class Scanner : AppCompatActivity() {
                 codeScanner.startPreview()
             }
         } else {
-            Toast.makeText(this, "Camera hardware required.", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                resources.getString(R.string.camera_hardware_required),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

@@ -10,20 +10,20 @@
         android:id="@+id/scanner_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:autoFocusButtonColor="@android:color/white"
+        app:autoFocusButtonColor="@color/white"
         app:autoFocusButtonVisible="true"
-        app:flashButtonColor="@android:color/white"
+        app:flashButtonColor="@color/white"
         app:flashButtonVisible="true"
         app:frameAspectRatioHeight="1"
         app:frameAspectRatioWidth="1"
-        app:frameColor="@android:color/white"
-        app:frameCornersRadius="0dp"
-        app:frameCornersSize="50dp"
+        app:frameColor="@color/white"
+        app:frameCornersSize="@dimen/corner_size"
         app:frameSize="0.75"
-        app:frameThickness="2dp"
-        app:maskColor="#77000000" />
+        app:frameThickness="@dimen/radius"
+        app:maskColor="@color/transparent" />
 
     <ImageView
+        android:id="@+id/organizations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
