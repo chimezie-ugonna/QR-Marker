@@ -24,7 +24,7 @@ class LoadingDialog(
     }
 
     fun show() {
-        text.text = message
+        text.text = message.replaceFirstChar { it.uppercase() }
         alertDialog.show()
     }
 

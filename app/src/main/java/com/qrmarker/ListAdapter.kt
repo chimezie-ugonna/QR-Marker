@@ -29,9 +29,13 @@ class ListAdapter(
                 val i = Intent(context, Rooms::class.java)
                 i.putExtra("id", ids[holder.adapterPosition])
                 context.startActivity(i)
+            } else {
+                val i = Intent(context, ViewCode::class.java)
+                i.putExtra("id", ids[holder.adapterPosition])
+                context.startActivity(i)
             }
         }
-        holder.name.text = names[holder.adapterPosition]
+        holder.name.text = names[holder.adapterPosition].replaceFirstChar { it.uppercase() }
         if (context is Organizations) {
             holder.status.visibility = View.GONE
             holder.status.text = ""
@@ -39,9 +43,11 @@ class ListAdapter(
             holder.status.visibility = View.VISIBLE
             if (statuses[holder.adapterPosition].equals("pending", true)) {
                 holder.status.text = context.resources.getString(R.string.unverified)
+                    .replaceFirstChar { it.uppercase() }
                 holder.status.setTextColor(ContextCompat.getColor(context, R.color.red))
             } else {
                 holder.status.text = context.resources.getString(R.string.verified)
+                    .replaceFirstChar { it.uppercase() }
                 holder.status.setTextColor(ContextCompat.getColor(context, R.color.green))
             }
         }

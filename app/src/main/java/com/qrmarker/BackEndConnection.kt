@@ -215,4 +215,97 @@ class BackEndConnection(var context: Context) {
         }
         requestQue.add(request)
     }
+
+    fun getSpecificRoom(id: String) {
+        requestQue = Volley.newRequestQueue(context)
+        val url = "https://qrmarker-api.herokuapp.com/api/v1/codes/$id"
+        val request = object : JsonObjectRequest(Method.GET, url, JSONObject(), {
+            try {
+                val message = it.getString("message")
+                if (message == "Success") {
+                    (context as RoomDetails).gotten(
+                        1,
+                        it.getJSONObject("payload").getString("title"),
+                        it.getJSONObject("payload").getString("status"),
+                        it.getJSONObject("payload").getString("createdAt"),
+                        it.getJSONObject("payload").getString("updatedAt")
+                    )
+                } else {
+                    (context as RoomDetails).gotten(-1, "", "", "", "")
+                }
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                (context as RoomDetails).gotten(-1, "", "", "", "")
+            }
+        }, Response.ErrorListener { error ->
+            error.printStackTrace()
+            (context as RoomDetails).gotten(-1, "", "", "", "")
+        }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val header: MutableMap<String, String> = HashMap()
+                header["Authorization"] = "Bearer 1234"
+                return header
+            }
+        }
+        requestQue.add(request)
+    }
+
+    fun verifyRoom(id: String) {
+        requestQue = Volley.newRequestQueue(context)
+        val url = "https://qrmarker-api.herokuapp.com/api/v1/codes/$id/mark"
+        val request = object : JsonObjectRequest(Method.GET, url, JSONObject(), {
+            try {
+                val message = it.getString("message")
+                if (message == "Success") {
+                    (context as RoomDetails).updated(1)
+                } else {
+                    (context as RoomDetails).updated(-1)
+                }
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                (context as RoomDetails).updated(-1)
+            }
+        }, Response.ErrorListener { error ->
+            error.printStackTrace()
+            (context as RoomDetails).updated(-1)
+        }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val header: MutableMap<String, String> = HashMap()
+                header["Authorization"] = "Bearer 1234"
+                return header
+            }
+        }
+        requestQue.add(request)
+    }
+
+    fun unverifyRoom(id: String) {
+        requestQue = Volley.newRequestQueue(context)
+        val url = "https://qrmarker-api.herokuapp.com/api/v1/codes/$id/unmark"
+        val request = object : JsonObjectRequest(Method.GET, url, JSONObject(), {
+            try {
+                val message = it.getString("message")
+                if (message == "Success") {
+                    (context as RoomDetails).updated(1)
+                } else {
+                    (context as RoomDetails).updated(-1)
+                }
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                (context as RoomDetails).updated(-1)
+            }
+        }, Response.ErrorListener { error ->
+            error.printStackTrace()
+            (context as RoomDetails).updated(-1)
+        }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val header: MutableMap<String, String> = HashMap()
+                header["Authorization"] = "Bearer 1234"
+                return header
+            }
+        }
+        requestQue.add(request)
+    }
 }

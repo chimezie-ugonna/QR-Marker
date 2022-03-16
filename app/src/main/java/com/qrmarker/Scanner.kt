@@ -28,7 +28,7 @@ class Scanner : AppCompatActivity() {
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
                 val i = Intent(this, RoomDetails::class.java)
-                i.putExtra("value", it.text)
+                i.putExtra("id", it.text)
                 startActivity(i)
             }
         }
@@ -37,30 +37,6 @@ class Scanner : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     resources.getString(R.string.scan_error_message),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
-        scannerView.setOnClickListener {
-            if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.CAMERA),
-                        1
-                    )
-                } else {
-                    codeScanner.startPreview()
-                }
-            } else {
-                Toast.makeText(
-                    this,
-                    resources.getString(R.string.camera_hardware_required),
                     Toast.LENGTH_LONG
                 ).show()
             }
