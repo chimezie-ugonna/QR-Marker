@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class ListAdapter(
@@ -36,7 +37,13 @@ class ListAdapter(
             holder.status.text = ""
         } else {
             holder.status.visibility = View.VISIBLE
-            holder.status.text = statuses[holder.adapterPosition]
+            if (statuses[holder.adapterPosition].equals("pending", true)) {
+                holder.status.text = context.resources.getString(R.string.unverified)
+                holder.status.setTextColor(ContextCompat.getColor(context, R.color.red))
+            } else {
+                holder.status.text = context.resources.getString(R.string.verified)
+                holder.status.setTextColor(ContextCompat.getColor(context, R.color.green))
+            }
         }
         holder.delete.setOnClickListener {
             val dialog = AlertDialog.Builder(context)
@@ -51,9 +58,19 @@ class ListAdapter(
                         holder.adapterPosition
                     )
                 }
-                dialog.setNegativeButton(context.resources.getString(R.string.no)) { d, _ ->
-                    d.dismiss()
+            } else if (context is Rooms) {
+                dialog.setTitle(context.resources.getString(R.string.delete_room))
+                dialog.setMessage(context.resources.getString(R.string.delete_room_confirm))
+                dialog.setPositiveButton(context.resources.getString(R.string.yes)) { _, _ ->
+                    context.loadingDialog.show()
+                    BackEndConnection(context).deleteRoom(
+                        ids[holder.adapterPosition],
+                        holder.adapterPosition
+                    )
                 }
+            }
+            dialog.setNegativeButton(context.resources.getString(R.string.no)) { d, _ ->
+                d.dismiss()
             }
             dialog.show()
         }
