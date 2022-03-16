@@ -26,4 +26,6 @@
     <string name="scan_error_message">An error occurred while trying to scan.</string>
     <string name="camera_permission_required">Camera permission required.</string>
     <string name="camera_hardware_required">Camera hardware required.</string>
+    <string name="unverified">Unverified</string>
+    <string name="verified">Verified</string>
 </resources>
