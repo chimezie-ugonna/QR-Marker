@@ -28,6 +28,7 @@ class Organizations : AppCompatActivity() {
     private lateinit var alert: AlertDialog
     private lateinit var dividerItemDecoration: DividerItemDecoration
     private lateinit var la: ListAdapter
+    private lateinit var back: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_organizations)
@@ -50,7 +51,9 @@ class Organizations : AppCompatActivity() {
         dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider)!!)
         list.addItemDecoration(dividerItemDecoration)
-        findViewById<ImageView>(R.id.back).setOnClickListener {
+
+        back = findViewById(R.id.back)
+        back.setOnClickListener {
             finish()
         }
 

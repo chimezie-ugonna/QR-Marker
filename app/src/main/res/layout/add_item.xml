@@ -38,6 +38,6 @@
         android:importantForAutofill="no"
         android:inputType="textCapWords"
         android:padding="@dimen/padding"
-        android:textSize="@dimen/normal" />
+        android:textSize="@dimen/big" />
 
 </RelativeLayout>
