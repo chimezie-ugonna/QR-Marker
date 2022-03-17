@@ -30,6 +30,7 @@
     <string name="share_error_message">An error occurred while trying to share code.</string>
     <string name="camera_permission_required">Camera permission required.</string>
     <string name="camera_hardware_required">Camera hardware required.</string>
+    <string name="unauthorized">You do not have authorized access to perform this operation.</string>
     <string name="unverified">Unverified</string>
     <string name="verified">Verified</string>
     <string name="verify">Verify</string>
@@ -39,4 +40,5 @@
     <string name="verified_at">Verified At</string>
     <string name="created_at">Created At</string>
     <string name="pending">Pending</string>
+    <string name="organization_name">Organization Name</string>
 </resources>

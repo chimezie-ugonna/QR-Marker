@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import org.json.JSONObject
 
 class ListAdapter(
     private val context: Context,
@@ -59,8 +61,11 @@ class ListAdapter(
                 dialog.setMessage(context.resources.getString(R.string.delete_org_confirm))
                 dialog.setPositiveButton(context.resources.getString(R.string.yes)) { _, _ ->
                     context.loadingDialog.show()
-                    BackEndConnection(context).deleteOrganization(
-                        ids[holder.adapterPosition],
+                    BackEndConnection(context).connect(
+                        "deleteOrganization",
+                        Request.Method.DELETE,
+                        "orgs/${ids[holder.adapterPosition]}",
+                        JSONObject(),
                         holder.adapterPosition
                     )
                 }
@@ -69,8 +74,11 @@ class ListAdapter(
                 dialog.setMessage(context.resources.getString(R.string.delete_room_confirm))
                 dialog.setPositiveButton(context.resources.getString(R.string.yes)) { _, _ ->
                     context.loadingDialog.show()
-                    BackEndConnection(context).deleteRoom(
-                        ids[holder.adapterPosition],
+                    BackEndConnection(context).connect(
+                        "deleteRoom",
+                        Request.Method.DELETE,
+                        "codes/${ids[holder.adapterPosition]}",
+                        JSONObject(),
                         holder.adapterPosition
                     )
                 }

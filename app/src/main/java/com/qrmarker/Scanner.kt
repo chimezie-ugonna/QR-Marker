@@ -15,9 +15,8 @@ class Scanner : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scanner)
-        val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
 
-        codeScanner = CodeScanner(this, scannerView)
+        codeScanner = CodeScanner(this, findViewById(R.id.scanner_view))
         codeScanner.camera = CodeScanner.CAMERA_BACK
         codeScanner.formats = CodeScanner.ALL_FORMATS
         codeScanner.autoFocusMode = AutoFocusMode.SAFE

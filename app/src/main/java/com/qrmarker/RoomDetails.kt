@@ -1,11 +1,19 @@
 package com.qrmarker
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.android.volley.Request
+import org.json.JSONObject
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
+
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class RoomDetails : AppCompatActivity() {
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var list: LinearLayout
@@ -15,11 +23,8 @@ class RoomDetails : AppCompatActivity() {
     private lateinit var error: RelativeLayout
     private lateinit var verifyCon: RelativeLayout
     private lateinit var verify: Button
-    private lateinit var name: TextView
     private lateinit var status: TextView
     private lateinit var updated: TextView
-    private lateinit var created: TextView
-    private lateinit var back: ImageView
     private var id: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,22 +51,31 @@ class RoomDetails : AppCompatActivity() {
         verifyCon = findViewById(R.id.verifyCon)
         verify = findViewById(R.id.verify)
         list = findViewById(R.id.list)
-        name = findViewById(R.id.name)
         status = findViewById(R.id.status)
         updated = findViewById(R.id.updated)
-        created = findViewById(R.id.created)
 
-        back = findViewById(R.id.back)
-        back.setOnClickListener {
+        findViewById<ImageView>(R.id.back).setOnClickListener {
             finish()
         }
 
         verify.setOnClickListener {
             loadingDialog.show()
             if (verify.text.equals(resources.getString(R.string.verify))) {
-                BackEndConnection(this).verifyRoom(id)
+                BackEndConnection(this).connect(
+                    "verifyRoom",
+                    Request.Method.GET,
+                    "codes/$id/mark",
+                    JSONObject(),
+                    -1
+                )
             } else {
-                BackEndConnection(this).unverifyRoom(id)
+                BackEndConnection(this).connect(
+                    "unverifyRoom",
+                    Request.Method.GET,
+                    "codes/$id/unmark",
+                    JSONObject(),
+                    -1
+                )
             }
         }
         loadData(true)
@@ -76,12 +90,26 @@ class RoomDetails : AppCompatActivity() {
             load.visibility = View.VISIBLE
         }
 
-        BackEndConnection(this).getSpecificRoom(id)
+        BackEndConnection(this).connect(
+            "getSpecificRoom",
+            Request.Method.GET,
+            "codes/$id",
+            JSONObject(),
+            -1
+        )
     }
 
-    fun gotten(i: Int, title: String, status: String, created: String, updated: String) {
+    fun gotten(
+        i: Int,
+        org: String,
+        title: String,
+        status: String,
+        created: String,
+        updated: String
+    ) {
         if (i == 1) {
-            name.text = title.replaceFirstChar { it.uppercase() }
+            findViewById<TextView>(R.id.org).text = org.replaceFirstChar { it.uppercase() }
+            findViewById<TextView>(R.id.name).text = title.replaceFirstChar { it.uppercase() }
             if (status.equals("pending", true)) {
                 this.status.text =
                     resources.getString(R.string.pending).replaceFirstChar { it.uppercase() }
@@ -90,23 +118,21 @@ class RoomDetails : AppCompatActivity() {
             } else {
                 this.status.text =
                     resources.getString(R.string.verified).replaceFirstChar { it.uppercase() }
-                this.updated.text = updated
+                this.updated.text = timeAgo(updated)
                 verify.text = resources.getString(R.string.unverify)
             }
-            this.created.text = created
+            findViewById<TextView>(R.id.created).text = timeAgo(created)
 
             list.visibility = View.VISIBLE
-            empty.visibility = View.GONE
-            load.visibility = View.GONE
             error.visibility = View.GONE
             verifyCon.visibility = View.VISIBLE
         } else {
             list.visibility = View.GONE
-            empty.visibility = View.GONE
             error.visibility = View.VISIBLE
-            load.visibility = View.GONE
             verifyCon.visibility = View.GONE
         }
+        empty.visibility = View.GONE
+        load.visibility = View.GONE
     }
 
     fun updated(i: Int) {
@@ -117,5 +143,20 @@ class RoomDetails : AppCompatActivity() {
         } else {
             Toast.makeText(this, getString(R.string.update_failed), Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun timeAgo(value: String): String {
+        var ago = value
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
+        sdf.timeZone = TimeZone.getTimeZone("GMT")
+        try {
+            val time: Long = sdf.parse(value).time
+            val now = System.currentTimeMillis()
+            ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS)
+                .toString()
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return ago
     }
 }
