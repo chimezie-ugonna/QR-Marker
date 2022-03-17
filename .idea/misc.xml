@@ -17,7 +17,7 @@
         <entry key="app/src/main/res/drawable/white_solid_grey_stroke.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/white_solid_grey_stroke_curved_edges.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/white_solid_top_grey_stroke.xml" value="0.1795" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_organizations.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_room_details.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_rooms.xml" value="0.19610507246376813" />

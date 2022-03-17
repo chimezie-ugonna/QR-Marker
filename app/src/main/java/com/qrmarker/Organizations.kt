@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.android.volley.Request
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
 
 class Organizations : AppCompatActivity() {
@@ -28,7 +30,6 @@ class Organizations : AppCompatActivity() {
     private lateinit var alert: AlertDialog
     private lateinit var dividerItemDecoration: DividerItemDecoration
     private lateinit var la: ListAdapter
-    private lateinit var back: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_organizations)
@@ -52,8 +53,7 @@ class Organizations : AppCompatActivity() {
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider)!!)
         list.addItemDecoration(dividerItemDecoration)
 
-        back = findViewById(R.id.back)
-        back.setOnClickListener {
+        findViewById<ImageView>(R.id.back).setOnClickListener {
             finish()
         }
 
@@ -79,7 +79,13 @@ class Organizations : AppCompatActivity() {
                 .setOnClickListener {
                     if (name.text.isNotEmpty()) {
                         loadingDialog.show()
-                        BackEndConnection(this).createOrganization(name.text.toString())
+                        BackEndConnection(this).connect(
+                            "createOrganization",
+                            Request.Method.POST,
+                            "orgs",
+                            JSONObject().put("title", name.text.toString()),
+                            -1
+                        )
                     } else {
                         name.error = getString(R.string.empty_field_error)
                     }
@@ -98,7 +104,13 @@ class Organizations : AppCompatActivity() {
         statuses = ArrayList()
         ids = ArrayList()
 
-        BackEndConnection(this).getAllOrganization()
+        BackEndConnection(this).connect(
+            "getAllOrganization",
+            Request.Method.GET,
+            "orgs",
+            JSONObject(),
+            -1
+        )
     }
 
     fun gotten(i: Int, jsonArray: JSONArray) {
@@ -113,12 +125,10 @@ class Organizations : AppCompatActivity() {
 
                 list.visibility = View.VISIBLE
                 empty.visibility = View.GONE
-                load.visibility = View.GONE
                 error.visibility = View.GONE
             } else {
                 list.visibility = View.GONE
                 empty.visibility = View.VISIBLE
-                load.visibility = View.GONE
                 error.visibility = View.GONE
             }
             la = ListAdapter(this, names, statuses, ids)
@@ -127,8 +137,8 @@ class Organizations : AppCompatActivity() {
             list.visibility = View.GONE
             empty.visibility = View.GONE
             error.visibility = View.VISIBLE
-            load.visibility = View.GONE
         }
+        load.visibility = View.GONE
     }
 
     fun created(i: Int, id: String, title: String) {

@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.android.volley.Request
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
 
 class Rooms : AppCompatActivity() {
@@ -29,7 +31,6 @@ class Rooms : AppCompatActivity() {
     private lateinit var dividerItemDecoration: DividerItemDecoration
     private lateinit var la: ListAdapter
     private var id: String = ""
-    private lateinit var back: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rooms)
@@ -60,8 +61,7 @@ class Rooms : AppCompatActivity() {
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider)!!)
         list.addItemDecoration(dividerItemDecoration)
 
-        back = findViewById(R.id.back)
-        back.setOnClickListener {
+        findViewById<ImageView>(R.id.back).setOnClickListener {
             finish()
         }
 
@@ -87,7 +87,13 @@ class Rooms : AppCompatActivity() {
                 .setOnClickListener {
                     if (name.text.isNotEmpty()) {
                         loadingDialog.show()
-                        BackEndConnection(this).createRoom(id, name.text.toString())
+                        BackEndConnection(this).connect(
+                            "createRoom",
+                            Request.Method.POST,
+                            "codes/$id",
+                            JSONObject().put("title", name.text.toString()),
+                            -1
+                        )
                     } else {
                         name.error = getString(R.string.empty_field_error)
                     }
@@ -106,7 +112,13 @@ class Rooms : AppCompatActivity() {
         statuses = ArrayList()
         ids = ArrayList()
 
-        BackEndConnection(this).getSpecificOrganization(id)
+        BackEndConnection(this).connect(
+            "getSpecificOrganization",
+            Request.Method.GET,
+            "orgs/$id",
+            JSONObject(),
+            -1
+        )
     }
 
     fun gotten(i: Int, jsonArray: JSONArray) {
@@ -121,22 +133,19 @@ class Rooms : AppCompatActivity() {
 
                 list.visibility = View.VISIBLE
                 empty.visibility = View.GONE
-                load.visibility = View.GONE
-                error.visibility = View.GONE
             } else {
                 list.visibility = View.GONE
                 empty.visibility = View.VISIBLE
-                load.visibility = View.GONE
-                error.visibility = View.GONE
             }
+            error.visibility = View.GONE
             la = ListAdapter(this, names, statuses, ids)
             list.adapter = la
         } else {
             list.visibility = View.GONE
             empty.visibility = View.GONE
             error.visibility = View.VISIBLE
-            load.visibility = View.GONE
         }
+        load.visibility = View.GONE
     }
 
     fun created(i: Int, id: String, title: String, status: String) {
