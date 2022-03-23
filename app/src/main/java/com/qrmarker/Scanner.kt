@@ -44,29 +44,7 @@ class Scanner : AppCompatActivity() {
         findViewById<ImageView>(R.id.organizations).setOnClickListener {
             startActivity(Intent(this, Organizations::class.java))
         }
-    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                codeScanner.startPreview()
-            } else {
-                Toast.makeText(
-                    this,
-                    resources.getString(R.string.camera_permission_required),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             if (ActivityCompat.checkSelfPermission(
                     this,
@@ -87,6 +65,25 @@ class Scanner : AppCompatActivity() {
                 resources.getString(R.string.camera_hardware_required),
                 Toast.LENGTH_LONG
             ).show()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                codeScanner.startPreview()
+            } else {
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.camera_permission_required),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
