@@ -61,7 +61,8 @@ class RoomDetails : AppCompatActivity() {
         verify.setOnClickListener {
             loadingDialog.show()
             if (verify.text.equals(resources.getString(R.string.verify))) {
-                BackEndConnection(this).connect(
+                BackEndConnection(
+                    this,
                     "verifyRoom",
                     Request.Method.GET,
                     "codes/$id/mark",
@@ -69,7 +70,8 @@ class RoomDetails : AppCompatActivity() {
                     -1
                 )
             } else {
-                BackEndConnection(this).connect(
+                BackEndConnection(
+                    this,
                     "unverifyRoom",
                     Request.Method.GET,
                     "codes/$id/unmark",
@@ -90,7 +92,8 @@ class RoomDetails : AppCompatActivity() {
             load.visibility = View.VISIBLE
         }
 
-        BackEndConnection(this).connect(
+        BackEndConnection(
+            this,
             "getSpecificRoom",
             Request.Method.GET,
             "codes/$id",

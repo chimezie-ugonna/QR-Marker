@@ -9,23 +9,69 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class BackEndConnection(var context: Context) {
+class BackEndConnection(
+    var context: Context, var type: String,
+    var method: Int,
+    var extension: String,
+    var jsonObject: JSONObject,
+    var position: Int
+) {
+    val url = "https://qrmarker-api.herokuapp.com/api/v1/"
 
-    fun connect(
-        type: String,
-        method: Int,
-        extension: String,
-        jsonObject: JSONObject,
-        position: Int
-    ) {
+    init {
         val requestQue = Volley.newRequestQueue(context)
-        val url = "https://qrmarker-api.herokuapp.com/api/v1/$extension"
-        val request = object : JsonObjectRequest(method, url, jsonObject, {
+        val request = object : JsonObjectRequest(method, "$url$extension", jsonObject, {
             try {
-                val message = it.getString("message")
+                val status = it.getInt("status")
                 when (type) {
+                    "logIn" -> {
+                        if (status in 200..299) {
+                            Session(context).token(it.getJSONObject("payload").getString("token"))
+                            Session(context).fullName(
+                                it.getJSONObject("payload").getJSONObject("user")
+                                    .getString("fullName")
+                            )
+                            Session(context).email(
+                                it.getJSONObject("payload").getJSONObject("user").getString("email")
+                            )
+                            Session(context).userType(
+                                it.getJSONObject("payload").getJSONObject("user")
+                                    .getString("userType")
+                            )
+                            Session(context).phoneNumber(
+                                it.getJSONObject("payload").getJSONObject("user")
+                                    .getString("phoneNumber")
+                            )
+                            (context as MainActivity).loggedIn(1, "")
+                        } else {
+                            (context as MainActivity).loggedIn(-1, "")
+                        }
+                    }
+                    "register" -> {
+                        if (status in 200..299) {
+                            Session(context).token(it.getJSONObject("payload").getString("token"))
+                            Session(context).fullName(
+                                it.getJSONObject("payload").getJSONObject("user")
+                                    .getString("fullName")
+                            )
+                            Session(context).email(
+                                it.getJSONObject("payload").getJSONObject("user").getString("email")
+                            )
+                            Session(context).userType(
+                                it.getJSONObject("payload").getJSONObject("user")
+                                    .getString("userType")
+                            )
+                            Session(context).phoneNumber(
+                                it.getJSONObject("payload").getJSONObject("user")
+                                    .getString("phoneNumber")
+                            )
+                            (context as MainActivity).registered(1, "")
+                        } else {
+                            (context as MainActivity).registered(-1, "")
+                        }
+                    }
                     "createOrganization" -> {
-                        if (message == "Success") {
+                        if (status in 200..299) {
                             (context as Organizations).created(
                                 1,
                                 it.getJSONObject("payload").getString("_id"),
@@ -36,7 +82,7 @@ class BackEndConnection(var context: Context) {
                         }
                     }
                     "createRoom" -> {
-                        if (message == "Success") {
+                        if (status in 200..299) {
                             (context as Rooms).created(
                                 1,
                                 it.getJSONObject("payload").getString("_id"),
@@ -48,21 +94,38 @@ class BackEndConnection(var context: Context) {
                         }
                     }
                     "deleteOrganization" -> {
-                        if (message == "Success") {
+                        if (status in 200..299) {
                             (context as Organizations).deleted(1, position)
                         } else {
                             (context as Organizations).deleted(-1, position)
                         }
                     }
+                    "assignUser" -> {
+                        if (status in 200..299) {
+                            (context as UserList).assigned(1)
+                        } else {
+                            (context as UserList).assigned(-1)
+                        }
+                    }
                     "deleteRoom" -> {
-                        if (message == "Success") {
+                        if (status in 200..299) {
                             (context as Rooms).deleted(1, position)
                         } else {
                             (context as Rooms).deleted(-1, position)
                         }
                     }
+                    "getAllUsers" -> {
+                        if (status in 200..299) {
+                            (context as UserList).gotten(
+                                1,
+                                it.getJSONObject("payload").getJSONArray("docs"), JSONObject()
+                            )
+                        } else {
+                            (context as UserList).gotten(-1, JSONArray(), JSONObject())
+                        }
+                    }
                     "getAllOrganization" -> {
-                        if (message == "Success") {
+                        if (status in 200..299) {
                             (context as Organizations).gotten(
                                 1,
                                 it.getJSONObject("payload").getJSONArray("docs")
@@ -71,8 +134,19 @@ class BackEndConnection(var context: Context) {
                             (context as Organizations).gotten(-1, JSONArray())
                         }
                     }
+                    "getAssignedUser" -> {
+                        if (status in 200..299) {
+                            (context as UserList).gotten(
+                                1,
+                                JSONArray(),
+                                it.getJSONObject("payload").getJSONObject("assignee")
+                            )
+                        } else {
+                            (context as UserList).gotten(-1, JSONArray(), JSONObject())
+                        }
+                    }
                     "getSpecificOrganization" -> {
-                        if (message == "Success") {
+                        if (status in 200..299) {
                             (context as Rooms).gotten(
                                 1,
                                 it.getJSONObject("payload").getJSONArray("codes")
@@ -82,7 +156,7 @@ class BackEndConnection(var context: Context) {
                         }
                     }
                     "getSpecificRoom" -> {
-                        if (message == "Success") {
+                        if (status in 200..299) {
                             (context as RoomDetails).gotten(
                                 1,
                                 it.getJSONObject("payload").getJSONObject("org").getString("title"),
@@ -96,21 +170,38 @@ class BackEndConnection(var context: Context) {
                         }
                     }
                     "verifyRoom", "unverifyRoom" -> {
-                        if (message == "Success") {
-                            (context as RoomDetails).updated(1)
+                        if (status in 200..299) {
+                            if (context is RoomDetails) {
+                                (context as RoomDetails).updated(1)
+                            } else {
+                                (context as Rooms).verifiedOrUnverifiedRoomS(1, position, type)
+                            }
                         } else {
-                            (context as RoomDetails).updated(-1)
+                            if (context is RoomDetails) {
+                                (context as RoomDetails).updated(-1)
+                            } else {
+                                (context as Rooms).verifiedOrUnverifiedRoomS(-1, position, type)
+                            }
                         }
                     }
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
                 when (type) {
+                    "logIn" -> {
+                        (context as MainActivity).loggedIn(-1, "")
+                    }
+                    "register" -> {
+                        (context as MainActivity).registered(-1, "")
+                    }
                     "createOrganization" -> {
                         (context as Organizations).created(-1, "", "")
                     }
                     "createRoom" -> {
                         (context as Rooms).created(-1, "", "", "")
+                    }
+                    "assignUser" -> {
+                        (context as UserList).assigned(-1)
                     }
                     "deleteOrganization" -> {
                         (context as Organizations).deleted(-1, position)
@@ -118,8 +209,14 @@ class BackEndConnection(var context: Context) {
                     "deleteRoom" -> {
                         (context as Rooms).deleted(-1, position)
                     }
+                    "getAllUsers" -> {
+                        (context as UserList).gotten(-1, JSONArray(), JSONObject())
+                    }
                     "getAllOrganization" -> {
                         (context as Organizations).gotten(-1, JSONArray())
+                    }
+                    "getAssignedUser" -> {
+                        (context as UserList).gotten(-1, JSONArray(), JSONObject())
                     }
                     "getSpecificOrganization" -> {
                         (context as Rooms).gotten(-1, JSONArray())
@@ -128,123 +225,63 @@ class BackEndConnection(var context: Context) {
                         (context as RoomDetails).gotten(-1, "", "", "", "", "")
                     }
                     "verifyRoom", "unverifyRoom" -> {
-                        (context as RoomDetails).updated(-1)
+                        if (context is RoomDetails) {
+                            (context as RoomDetails).updated(-1)
+                        } else {
+                            (context as Rooms).verifiedOrUnverifiedRoomS(-1, position, type)
+                        }
                     }
                 }
             }
         }, Response.ErrorListener { error ->
             error.printStackTrace()
+            var message = ""
+            if (error.networkResponse != null && error.networkResponse.data != null) {
+                message = String(error.networkResponse.data)
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            }
             when (type) {
+                "logIn" -> {
+                    (context as MainActivity).loggedIn(-1, message)
+                }
+                "register" -> {
+                    (context as MainActivity).registered(-1, message)
+                }
                 "createOrganization" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is Organizations) {
-                            (context as Organizations).finish()
-                        }
-                    } else {
-                        (context as Organizations).created(-1, "", "")
-                    }
+                    (context as Organizations).created(-1, "", "")
                 }
                 "createRoom" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is Rooms) {
-                            (context as Rooms).finish()
-                        }
-                    } else {
-                        (context as Rooms).created(-1, "", "", "")
-                    }
+                    (context as Rooms).created(-1, "", "", "")
+                }
+                "assignUser" -> {
+                    (context as UserList).assigned(-1)
                 }
                 "deleteOrganization" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is Organizations) {
-                            (context as Organizations).finish()
-                        }
-                    } else {
-                        (context as Organizations).deleted(-1, position)
-                    }
+                    (context as Organizations).deleted(-1, position)
                 }
                 "deleteRoom" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is Rooms) {
-                            (context as Rooms).finish()
-                        }
-                    } else {
-                        (context as Rooms).deleted(-1, position)
-                    }
+                    (context as Rooms).deleted(-1, position)
+                }
+                "getAllUsers" -> {
+                    (context as UserList).gotten(-1, JSONArray(), JSONObject())
                 }
                 "getAllOrganization" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is Organizations) {
-                            (context as Organizations).finish()
-                        }
-                    } else {
-                        (context as Organizations).gotten(-1, JSONArray())
-                    }
+                    (context as Organizations).gotten(-1, JSONArray())
+                }
+                "getAssignedUser" -> {
+                    (context as UserList).gotten(-1, JSONArray(), JSONObject())
                 }
                 "getSpecificOrganization" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is Rooms) {
-                            (context as Rooms).finish()
-                        }
-                    } else {
-                        (context as Rooms).gotten(-1, JSONArray())
-                    }
+                    (context as Rooms).gotten(-1, JSONArray())
                 }
                 "getSpecificRoom" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is RoomDetails) {
-                            (context as RoomDetails).finish()
-                        }
-                    } else {
-                        (context as RoomDetails).gotten(-1, "", "", "", "", "")
-                    }
+                    (context as RoomDetails).gotten(-1, "", "", "", "", "")
                 }
                 "verifyRoom", "unverifyRoom" -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.unauthorized),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        if (context is RoomDetails) {
-                            (context as RoomDetails).finish()
-                        }
-                    } else {
+                    if (context is RoomDetails) {
                         (context as RoomDetails).updated(-1)
+                    } else {
+                        (context as Rooms).verifiedOrUnverifiedRoomS(-1, position, type)
                     }
                 }
             }
@@ -252,7 +289,7 @@ class BackEndConnection(var context: Context) {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val header: MutableMap<String, String> = HashMap()
-                header["Authorization"] = "Bearer ${Session(context).password()}"
+                header["Authorization"] = "Bearer ${Session(context).token()}"
                 return header
             }
         }

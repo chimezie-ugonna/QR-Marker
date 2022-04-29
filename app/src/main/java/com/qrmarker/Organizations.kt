@@ -28,6 +28,7 @@ class Organizations : AppCompatActivity() {
     private lateinit var load: RelativeLayout
     private lateinit var error: RelativeLayout
     private lateinit var alert: AlertDialog
+    private lateinit var add: ImageView
     private lateinit var dividerItemDecoration: DividerItemDecoration
     private lateinit var la: ListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +58,11 @@ class Organizations : AppCompatActivity() {
             finish()
         }
 
-        findViewById<ImageView>(R.id.add).setOnClickListener {
+        add = findViewById(R.id.add)
+        if (Session(this).userType() == "user") {
+            add.visibility = View.GONE
+        }
+        add.setOnClickListener {
             val v = LayoutInflater.from(this).inflate(R.layout.add_item, null, false)
             v.findViewById<TextView>(R.id.title).text = getString(R.string.create_organization)
             v.findViewById<TextView>(R.id.description).text =
@@ -79,8 +84,8 @@ class Organizations : AppCompatActivity() {
                 .setOnClickListener {
                     if (name.text.isNotEmpty()) {
                         loadingDialog.show()
-                        BackEndConnection(this).connect(
-                            "createOrganization",
+                        BackEndConnection(
+                            this, "createOrganization",
                             Request.Method.POST,
                             "orgs",
                             JSONObject().put("title", name.text.toString()),
@@ -104,7 +109,8 @@ class Organizations : AppCompatActivity() {
         statuses = ArrayList()
         ids = ArrayList()
 
-        BackEndConnection(this).connect(
+        BackEndConnection(
+            this,
             "getAllOrganization",
             Request.Method.GET,
             "orgs",
@@ -131,7 +137,7 @@ class Organizations : AppCompatActivity() {
                 empty.visibility = View.VISIBLE
                 error.visibility = View.GONE
             }
-            la = ListAdapter(this, names, statuses, ids)
+            la = ListAdapter(this, names, statuses, ids, null, null, null)
             list.adapter = la
         } else {
             list.visibility = View.GONE

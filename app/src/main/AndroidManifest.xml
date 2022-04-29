@@ -22,6 +22,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.SplashScreen">
         <activity
+            android:name=".UserList"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.QRMarker.main"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".Profile"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.QRMarker.main"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".ViewCode"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"

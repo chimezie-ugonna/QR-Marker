@@ -45,6 +45,10 @@ class Scanner : AppCompatActivity() {
             startActivity(Intent(this, Organizations::class.java))
         }
 
+        findViewById<ImageView>(R.id.profile).setOnClickListener {
+            startActivity(Intent(this, Profile::class.java))
+        }
+
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             if (ActivityCompat.checkSelfPermission(
                     this,
@@ -66,6 +70,8 @@ class Scanner : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
+
+        println("Bearer token: ${Session(this).token()}")
     }
 
     override fun onRequestPermissionsResult(
