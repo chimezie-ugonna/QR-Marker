@@ -14,9 +14,9 @@ class BackEndConnection(
     var method: Int,
     var extension: String,
     var jsonObject: JSONObject,
-    var position: Int
+    var position: Int,
+    var url: String = "https://qrmarker-api.herokuapp.com/api/v1/"
 ) {
-    val url = "https://qrmarker-api.herokuapp.com/api/v1/"
 
     init {
         val requestQue = Volley.newRequestQueue(context)
