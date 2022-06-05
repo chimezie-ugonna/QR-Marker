@@ -1,4 +1,4 @@
-package com.qrmarker
+package com.qrmarker.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.qrmarker.R
+import com.qrmarker.models.KeyStore
+import com.qrmarker.models.Session
 
 class Profile : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +31,13 @@ class Profile : AppCompatActivity() {
             dialog.setTitle(getString(R.string.confirm_log_out_title))
             dialog.setMessage(getString(R.string.confirm_log_out_message))
             dialog.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
-                Session(this).token("")
+                Session(this).encryptedTokenIv("")
+                Session(this).encryptedToken("")
                 Session(this).fullName("")
                 Session(this).email("")
                 Session(this).userType("")
                 Session(this).phoneNumber("")
+                KeyStore(this).deleteKey()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }

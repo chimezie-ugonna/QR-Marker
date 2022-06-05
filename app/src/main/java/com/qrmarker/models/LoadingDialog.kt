@@ -1,10 +1,11 @@
-package com.qrmarker
+package com.qrmarker.models
 
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import com.qrmarker.R
 
 class LoadingDialog(
     private val context: Context,

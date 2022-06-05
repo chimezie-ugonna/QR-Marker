@@ -1,4 +1,4 @@
-package com.qrmarker
+package com.qrmarker.activities
 
 import android.Manifest
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.budiyev.android.codescanner.*
+import com.qrmarker.R
 
 class Scanner : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
@@ -70,8 +71,6 @@ class Scanner : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
-
-        println("Bearer token: ${Session(this).token()}")
     }
 
     override fun onRequestPermissionsResult(

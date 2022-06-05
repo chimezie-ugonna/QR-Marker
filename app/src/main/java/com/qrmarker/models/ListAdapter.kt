@@ -1,4 +1,4 @@
-package com.qrmarker
+package com.qrmarker.models
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +10,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
+import com.qrmarker.R
+import com.qrmarker.activities.Organizations
+import com.qrmarker.activities.Rooms
+import com.qrmarker.activities.UserList
+import com.qrmarker.activities.ViewCode
 import org.json.JSONObject
 
 class ListAdapter(

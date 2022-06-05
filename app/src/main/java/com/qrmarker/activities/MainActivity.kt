@@ -1,4 +1,4 @@
-package com.qrmarker
+package com.qrmarker.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,10 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.android.volley.Request
+import com.qrmarker.R
+import com.qrmarker.models.BackEndConnection
+import com.qrmarker.models.LoadingDialog
+import com.qrmarker.models.Session
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
@@ -123,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (Session(this).token() != "") {
+        if (Session(this).encryptedToken() != "") {
             startActivity(Intent(this, Scanner::class.java))
             finish()
         }

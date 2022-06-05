@@ -1,4 +1,4 @@
-package com.qrmarker
+package com.qrmarker.activities
 
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -7,6 +7,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
+import com.qrmarker.R
+import com.qrmarker.models.BackEndConnection
+import com.qrmarker.models.LoadingDialog
 import org.json.JSONObject
 import java.text.ParseException
 import java.text.SimpleDateFormat

@@ -1,7 +1,8 @@
-package com.qrmarker
+package com.qrmarker.models
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.qrmarker.R
 
 class Session(context: Context) {
     private val sp: SharedPreferences =
@@ -11,13 +12,22 @@ class Session(context: Context) {
         )
     private val spe: SharedPreferences.Editor = sp.edit()
 
-    fun token(value: String) {
-        spe.putString("token", value)
+    fun encryptedTokenIv(data: String) {
+        spe.putString("encryptedTokenIv", data)
         spe.commit()
     }
 
-    fun token(): String? {
-        return sp.getString("token", "")
+    fun encryptedTokenIv(): String? {
+        return sp.getString("encryptedTokenIv", "")
+    }
+
+    fun encryptedToken(data: String) {
+        spe.putString("encryptedToken", data)
+        spe.commit()
+    }
+
+    fun encryptedToken(): String? {
+        return sp.getString("encryptedToken", "")
     }
 
     fun fullName(value: String) {

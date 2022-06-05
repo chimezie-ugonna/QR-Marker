@@ -1,10 +1,10 @@
-package com.qrmarker
+package com.qrmarker.models
 
 import android.content.Context
-import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.qrmarker.activities.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -26,7 +26,15 @@ class BackEndConnection(
                 when (type) {
                     "logIn" -> {
                         if (status in 200..299) {
-                            Session(context).token(it.getJSONObject("payload").getString("token"))
+                            val encryptedData = KeyStore(context).encryptData(
+                                it.getJSONObject("payload").getString("token")
+                            )
+                            Session(context).encryptedTokenIv(
+                                encryptedData.first.toString(Charsets.ISO_8859_1).trim()
+                            )
+                            Session(context).encryptedToken(
+                                encryptedData.second.toString(Charsets.ISO_8859_1).trim()
+                            )
                             Session(context).fullName(
                                 it.getJSONObject("payload").getJSONObject("user")
                                     .getString("fullName")
@@ -49,7 +57,15 @@ class BackEndConnection(
                     }
                     "register" -> {
                         if (status in 200..299) {
-                            Session(context).token(it.getJSONObject("payload").getString("token"))
+                            val encryptedData = KeyStore(context).encryptData(
+                                it.getJSONObject("payload").getString("token")
+                            )
+                            Session(context).encryptedTokenIv(
+                                encryptedData.first.toString(Charsets.ISO_8859_1).trim()
+                            )
+                            Session(context).encryptedToken(
+                                encryptedData.second.toString(Charsets.ISO_8859_1).trim()
+                            )
                             Session(context).fullName(
                                 it.getJSONObject("payload").getJSONObject("user")
                                     .getString("fullName")
@@ -238,7 +254,6 @@ class BackEndConnection(
             var message = ""
             if (error.networkResponse != null && error.networkResponse.data != null) {
                 message = String(error.networkResponse.data)
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
             when (type) {
                 "logIn" -> {
@@ -289,7 +304,20 @@ class BackEndConnection(
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val header: MutableMap<String, String> = HashMap()
-                header["Authorization"] = "Bearer ${Session(context).token()}"
+                if (Session(context).encryptedTokenIv() != "" && Session(context).encryptedToken() != "") {
+                    val decryptedData = Session(context).encryptedTokenIv()?.let {
+                        Session(context).encryptedToken()?.let { it1 ->
+                            KeyStore(context).decryptData(
+                                it.toByteArray(
+                                    Charsets.ISO_8859_1
+                                ), it1.toByteArray(
+                                    Charsets.ISO_8859_1
+                                )
+                            )
+                        }
+                    }
+                    header["Authorization"] = "Bearer $decryptedData"
+                }
                 return header
             }
         }

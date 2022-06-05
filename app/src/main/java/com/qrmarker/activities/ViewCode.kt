@@ -1,4 +1,4 @@
-package com.qrmarker
+package com.qrmarker.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.qrmarker.BuildConfig
+import com.qrmarker.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream

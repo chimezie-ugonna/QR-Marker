@@ -1,4 +1,4 @@
-package com.qrmarker
+package com.qrmarker.activities
 
 import android.os.Bundle
 import android.view.View
@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
+import com.qrmarker.R
+import com.qrmarker.models.BackEndConnection
+import com.qrmarker.models.ListAdapter
+import com.qrmarker.models.LoadingDialog
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
