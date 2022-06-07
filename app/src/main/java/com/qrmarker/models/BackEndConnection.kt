@@ -26,14 +26,8 @@ class BackEndConnection(
                 when (type) {
                     "logIn" -> {
                         if (status in 200..299) {
-                            val encryptedData = KeyStore(context).encryptData(
+                            KeyStore(context).encryptData(
                                 it.getJSONObject("payload").getString("token")
-                            )
-                            Session(context).encryptedTokenIv(
-                                encryptedData.first.toString(Charsets.ISO_8859_1).trim()
-                            )
-                            Session(context).encryptedToken(
-                                encryptedData.second.toString(Charsets.ISO_8859_1).trim()
                             )
                             Session(context).fullName(
                                 it.getJSONObject("payload").getJSONObject("user")
@@ -57,14 +51,8 @@ class BackEndConnection(
                     }
                     "register" -> {
                         if (status in 200..299) {
-                            val encryptedData = KeyStore(context).encryptData(
+                            KeyStore(context).encryptData(
                                 it.getJSONObject("payload").getString("token")
-                            )
-                            Session(context).encryptedTokenIv(
-                                encryptedData.first.toString(Charsets.ISO_8859_1).trim()
-                            )
-                            Session(context).encryptedToken(
-                                encryptedData.second.toString(Charsets.ISO_8859_1).trim()
                             )
                             Session(context).fullName(
                                 it.getJSONObject("payload").getJSONObject("user")
@@ -305,17 +293,7 @@ class BackEndConnection(
             override fun getHeaders(): MutableMap<String, String> {
                 val header: MutableMap<String, String> = HashMap()
                 if (Session(context).encryptedTokenIv() != "" && Session(context).encryptedToken() != "") {
-                    val decryptedData = Session(context).encryptedTokenIv()?.let {
-                        Session(context).encryptedToken()?.let { it1 ->
-                            KeyStore(context).decryptData(
-                                it.toByteArray(
-                                    Charsets.ISO_8859_1
-                                ), it1.toByteArray(
-                                    Charsets.ISO_8859_1
-                                )
-                            )
-                        }
-                    }
+                    val decryptedData = KeyStore(context).decryptData()
                     header["Authorization"] = "Bearer $decryptedData"
                 }
                 return header

@@ -3,6 +3,7 @@ package com.qrmarker.models
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.Base64
 import com.qrmarker.R
 import java.security.KeyStore
 import javax.crypto.Cipher
@@ -53,7 +54,7 @@ class KeyStore(val context: Context) {
         keyStore.deleteEntry(alias)
     }
 
-    fun encryptData(data: String): Pair<ByteArray, ByteArray> {
+    fun encryptData(data: String) {
         val cipher = Cipher.getInstance("AES/CBC/NoPadding")
         var temp = data
         while (temp.toByteArray().size % 16 != 0) {
@@ -62,10 +63,18 @@ class KeyStore(val context: Context) {
         cipher.init(Cipher.ENCRYPT_MODE, generateKey())
         val ivBytes = cipher.iv
         val encryptedBytes = cipher.doFinal(temp.toByteArray(Charsets.UTF_8))
-        return Pair(ivBytes, encryptedBytes)
+        Session(context).encryptedTokenIv(
+            Base64.encodeToString(ivBytes, Base64.NO_WRAP)
+        )
+        Session(context).encryptedToken(
+            Base64.encodeToString(encryptedBytes, Base64.NO_WRAP)
+        )
     }
 
-    fun decryptData(ivBytes: ByteArray, data: ByteArray): String {
+    fun decryptData(
+        ivBytes: ByteArray = Base64.decode(Session(context).encryptedTokenIv(), Base64.NO_WRAP),
+        data: ByteArray = Base64.decode(Session(context).encryptedToken(), Base64.NO_WRAP)
+    ): String {
         val cipher = Cipher.getInstance("AES/CBC/NoPadding")
         val spec = IvParameterSpec(ivBytes)
         cipher.init(Cipher.DECRYPT_MODE, getKey(), spec)
