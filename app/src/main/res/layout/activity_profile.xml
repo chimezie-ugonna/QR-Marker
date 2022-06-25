@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".activities.Profile">
+    tools:context=".controller.activities.Profile">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,44 +30,112 @@
         android:orientation="vertical"
         android:padding="@dimen/padding">
 
-        <TextView
-            android:id="@+id/full_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/white_solid_grey_stroke"
-            android:padding="@dimen/padding"
-            android:textColor="@color/black"
-            android:textSize="@dimen/big" />
+            android:orientation="horizontal"
+            android:padding="@dimen/padding">
 
-        <TextView
-            android:id="@+id/email"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/full_name_"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/full_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding"
             android:background="@drawable/white_solid_grey_stroke"
-            android:padding="@dimen/padding"
-            android:textColor="@color/black"
-            android:textSize="@dimen/big" />
+            android:orientation="horizontal"
+            android:padding="@dimen/padding">
 
-        <TextView
-            android:id="@+id/type"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email_"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding"
             android:background="@drawable/white_solid_grey_stroke"
-            android:padding="@dimen/padding"
-            android:textColor="@color/black"
-            android:textSize="@dimen/big" />
+            android:orientation="horizontal"
+            android:padding="@dimen/padding">
 
-        <TextView
-            android:id="@+id/phone_number"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/type_"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding"
             android:background="@drawable/white_solid_grey_stroke"
-            android:padding="@dimen/padding"
-            android:textColor="@color/black"
-            android:textSize="@dimen/big" />
+            android:orientation="horizontal"
+            android:padding="@dimen/padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/phone_number_"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/log_out"

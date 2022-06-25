@@ -26,6 +26,7 @@
     <string name="deletion_failed">Deletion failed because an error occurred.</string>
     <string name="delete_org">Delete Organization</string>
     <string name="delete_org_confirm">Are you sure you want to delete this organization?</string>
+    <string name="remove_assignee_confirm">Are you sure you want to remove this assignee?</string>
     <string name="delete_room">Delete Room</string>
     <string name="delete_room_confirm">Are you sure you want to delete this room?</string>
     <string name="something_went_wrong_please_drag_this_page_down_to_refresh">Something went wrong. Please drag this page down to refresh.</string>
@@ -37,8 +38,8 @@
     <string name="unauthorized">You do not have authorized access to perform this operation.</string>
     <string name="unverified">Unverified</string>
     <string name="verified">Verified</string>
-    <string name="verify">Verify</string>
-    <string name="unverify">Unverify</string>
+    <string name="verify">Vérifier</string>
+    <string name="unverify">annuler la vérification</string>
     <string name="room_name">Room Name</string>
     <string name="status">Status</string>
     <string name="verified_at">Verified At</string>
@@ -67,15 +68,23 @@
     <string name="view_assignees">View Assignees</string>
     <string name="user_assigned_message">User assigned successfully.</string>
     <string name="user_assigned_failure_message">User could not be assigned because an error occurred.</string>
+    <string name="assignee_removed_message">Assignee removed successfully.</string>
+    <string name="assignee_removed_failure_message">Assignee could not be removed because an error occurred.</string>
     <string name="full_name_">Full Name:</string>
     <string name="email_">Email:</string>
     <string name="type_">Type:</string>
     <string name="phone_number_">Phone Number:</string>
     <string name="view_assignee">View Assignee</string>
+    <string name="remove_assignee">Remove Assignee</string>
     <string name="verify_confirmation_plural">Verify selected rooms?</string>
     <string name="verify_confirmation_singular">Verify selected room?</string>
     <string name="unverify_confirmation_plural">Unverify selected rooms?</string>
     <string name="unverify_confirmation_singular">Unverify selected room?</string>
     <string name="verifying_empty_room_message">Please select a room to verify.</string>
     <string name="unverifying_empty_room_message">Please select a room to unverify.</string>
+    <string name="enter_your_comment_here">Enter your comment here</string>
+    <string name="verified_this_room_on">Verified this room on</string>
+    <string name="unverified_this_room_on">Unverified this room on</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="comment">Comment</string>
 </resources>

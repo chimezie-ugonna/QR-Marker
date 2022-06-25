@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".controller.activities.UserList">
+    tools:context=".controller.activities.History">
 
     <RelativeLayout
         android:id="@+id/bar"
@@ -20,6 +20,15 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:src="@drawable/back"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/view_code"
+            android:layout_width="@dimen/title"
+            android:layout_height="@dimen/title"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/qr_code"
             tools:ignore="ContentDescription" />
 
     </RelativeLayout>

@@ -1,15 +1,20 @@
-package com.qrmarker.activities
+package com.qrmarker.controller.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.budiyev.android.codescanner.*
 import com.qrmarker.R
+
 
 class Scanner : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
@@ -26,20 +31,28 @@ class Scanner : AppCompatActivity() {
         codeScanner.isFlashEnabled = false
 
         codeScanner.decodeCallback = DecodeCallback {
-            runOnUiThread {
-                val i = Intent(this, RoomDetails::class.java)
-                i.putExtra("id", it.text)
-                startActivity(i)
+            val i = Intent(this, RoomDetails::class.java)
+            i.putExtra("id", it.text)
+            startActivity(i)
+
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= 26) {
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        200,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
+            } else {
+                vibrator.vibrate(200)
             }
         }
         codeScanner.errorCallback = ErrorCallback {
-            runOnUiThread {
-                Toast.makeText(
-                    this,
-                    resources.getString(R.string.scan_error_message),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            Toast.makeText(
+                this,
+                resources.getString(R.string.scan_error_message),
+                Toast.LENGTH_LONG
+            ).show()
         }
 
         findViewById<ImageView>(R.id.organizations).setOnClickListener {
@@ -95,5 +108,18 @@ class Scanner : AppCompatActivity() {
     override fun onPause() {
         codeScanner.releaseResources()
         super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                codeScanner.startPreview()
+            }
+        }
     }
 }

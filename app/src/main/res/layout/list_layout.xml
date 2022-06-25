@@ -13,13 +13,14 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/padding"
+        android:checked="false"
         android:visibility="gone" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/delete"
+        android:layout_toStartOf="@+id/end_con"
         android:layout_toEndOf="@+id/box">
 
         <LinearLayout
@@ -47,6 +48,9 @@
                     android:id="@+id/full_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/big" />
             </LinearLayout>
@@ -69,6 +73,9 @@
                     android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/big" />
             </LinearLayout>
@@ -91,6 +98,9 @@
                     android:id="@+id/type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/big" />
             </LinearLayout>
@@ -113,6 +123,9 @@
                     android:id="@+id/phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/big" />
             </LinearLayout>
@@ -130,6 +143,8 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/big" />
 
@@ -137,19 +152,35 @@
                 android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/normal" />
 
         </LinearLayout>
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/delete"
+    <FrameLayout
+        android:id="@+id/end_con"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/padding"
-        android:src="@drawable/delete"
-        tools:ignore="ContentDescription" />
+        android:layout_marginStart="@dimen/padding">
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/delete"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/info"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+    </FrameLayout>
 </RelativeLayout>

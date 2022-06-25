@@ -1,4 +1,4 @@
-package com.qrmarker.activities
+package com.qrmarker.controller.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent

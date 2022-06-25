@@ -4,7 +4,7 @@ import android.content.Context
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.qrmarker.activities.*
+import com.qrmarker.controller.activities.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -138,15 +138,47 @@ class BackEndConnection(
                             (context as Organizations).gotten(-1, JSONArray())
                         }
                     }
+                    "getHistory" -> {
+                        if (status in 200..299) {
+                            try {
+                                (context as History).gotten(
+                                    1,
+                                    it.getJSONObject("payload").getJSONArray("docs")
+                                )
+                            } catch (e: JSONException) {
+                                (context as History).gotten(
+                                    2,
+                                    JSONArray()
+                                )
+                            }
+                        } else {
+                            (context as History).gotten(-1, JSONArray())
+                        }
+                    }
                     "getAssignedUser" -> {
                         if (status in 200..299) {
-                            (context as UserList).gotten(
-                                1,
-                                JSONArray(),
-                                it.getJSONObject("payload").getJSONObject("assignee")
-                            )
+                            try {
+                                (context as UserList).gotten(
+                                    1,
+                                    JSONArray(),
+                                    it.getJSONObject("payload").getJSONObject("assignee")
+                                )
+                            } catch (e: JSONException) {
+                                (context as UserList).gotten(
+                                    2,
+                                    JSONArray(),
+                                    JSONObject()
+                                )
+                            }
                         } else {
                             (context as UserList).gotten(-1, JSONArray(), JSONObject())
+                        }
+                    }
+                    "removeAssignee" -> {
+                        if (status in 200..299) {
+                            (context as UserList).removed(1)
+                        } else {
+                            (context as UserList).removed(-1)
                         }
                     }
                     "getSpecificOrganization" -> {
@@ -219,8 +251,14 @@ class BackEndConnection(
                     "getAllOrganization" -> {
                         (context as Organizations).gotten(-1, JSONArray())
                     }
+                    "getHistory" -> {
+                        (context as History).gotten(-1, JSONArray())
+                    }
                     "getAssignedUser" -> {
                         (context as UserList).gotten(-1, JSONArray(), JSONObject())
+                    }
+                    "removeAssignee" -> {
+                        (context as UserList).removed(-1)
                     }
                     "getSpecificOrganization" -> {
                         (context as Rooms).gotten(-1, JSONArray())
@@ -271,8 +309,14 @@ class BackEndConnection(
                 "getAllOrganization" -> {
                     (context as Organizations).gotten(-1, JSONArray())
                 }
+                "getHistory" -> {
+                    (context as History).gotten(-1, JSONArray())
+                }
                 "getAssignedUser" -> {
                     (context as UserList).gotten(-1, JSONArray(), JSONObject())
+                }
+                "removeAssignee" -> {
+                    (context as UserList).removed(-1)
                 }
                 "getSpecificOrganization" -> {
                     (context as Rooms).gotten(-1, JSONArray())

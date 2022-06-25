@@ -1,4 +1,4 @@
-package com.qrmarker.activities
+package com.qrmarker.controller.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
 import com.qrmarker.R
+import com.qrmarker.adapter.ListAdapter
 import com.qrmarker.models.BackEndConnection
-import com.qrmarker.models.ListAdapter
 import com.qrmarker.models.LoadingDialog
 import com.qrmarker.models.Session
 import org.json.JSONArray
@@ -304,7 +304,7 @@ class Rooms : AppCompatActivity() {
             BackEndConnection(
                 this,
                 "verifyRoom",
-                Request.Method.GET,
+                Request.Method.POST,
                 "codes/${selectedRooms[position]}/mark",
                 JSONObject(),
                 position
@@ -313,7 +313,7 @@ class Rooms : AppCompatActivity() {
             BackEndConnection(
                 this,
                 "unverifyRoom",
-                Request.Method.GET,
+                Request.Method.POST,
                 "codes/${selectedRooms[position]}/unmark",
                 JSONObject(),
                 position

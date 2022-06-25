@@ -1,4 +1,4 @@
-package com.qrmarker.activities
+package com.qrmarker.controller.activities
 
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -28,6 +28,7 @@ class RoomDetails : AppCompatActivity() {
     private lateinit var verify: Button
     private lateinit var status: TextView
     private lateinit var updated: TextView
+    private lateinit var comment: EditText
     private var id: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +57,7 @@ class RoomDetails : AppCompatActivity() {
         list = findViewById(R.id.list)
         status = findViewById(R.id.status)
         updated = findViewById(R.id.updated)
+        comment = findViewById(R.id.comment)
 
         findViewById<ImageView>(R.id.back).setOnClickListener {
             finish()
@@ -67,18 +69,18 @@ class RoomDetails : AppCompatActivity() {
                 BackEndConnection(
                     this,
                     "verifyRoom",
-                    Request.Method.GET,
+                    Request.Method.POST,
                     "codes/$id/mark",
-                    JSONObject(),
+                    JSONObject().put("comment", comment.text.toString().trim()),
                     -1
                 )
             } else {
                 BackEndConnection(
                     this,
                     "unverifyRoom",
-                    Request.Method.GET,
+                    Request.Method.POST,
                     "codes/$id/unmark",
-                    JSONObject(),
+                    JSONObject().put("comment", comment.text.toString().trim()),
                     -1
                 )
             }
@@ -154,7 +156,7 @@ class RoomDetails : AppCompatActivity() {
     private fun timeAgo(value: String): String {
         var ago = value
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
-        sdf.timeZone = TimeZone.getTimeZone("GMT")
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
         try {
             val time: Long = sdf.parse(value).time
             val now = System.currentTimeMillis()

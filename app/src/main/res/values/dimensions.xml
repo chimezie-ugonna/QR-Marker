@@ -9,4 +9,5 @@
     <dimen name="normal">15sp</dimen>
     <dimen name="small">10sp</dimen>
     <dimen name="image_dimen">300sp</dimen>
+    <dimen name="comment_box_height">150sp</dimen>
 </resources>
