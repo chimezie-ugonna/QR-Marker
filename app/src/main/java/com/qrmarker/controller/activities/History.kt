@@ -19,7 +19,10 @@ import com.qrmarker.models.BackEndConnection
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.Objects
+import java.util.TimeZone
 
 class History : AppCompatActivity() {
     private lateinit var list: RecyclerView
@@ -108,17 +111,13 @@ class History : AppCompatActivity() {
                         if (jsonObject.getBoolean("verified")) {
                             statuses.add(
                                 "${getString(R.string.verified_this_room_on)} ${
-                                    timeAgo(
-                                        jsonObject.getString("createdAt")
-                                    )
+                                    jsonObject.getString("createdAt").timeAgo()
                                 }"
                             )
                         } else {
                             statuses.add(
                                 "${getString(R.string.unverified_this_room_on)} ${
-                                    timeAgo(
-                                        jsonObject.getString("createdAt")
-                                    )
+                                    jsonObject.getString("createdAt").timeAgo()
                                 }"
                             )
                         }
@@ -134,11 +133,13 @@ class History : AppCompatActivity() {
                 la = ListAdapter(this, names, statuses, comments, null, null, null)
                 list.adapter = la
             }
+
             2 -> {
                 list.visibility = View.GONE
                 empty.visibility = View.VISIBLE
                 error.visibility = View.GONE
             }
+
             else -> {
                 list.visibility = View.GONE
                 empty.visibility = View.GONE
@@ -148,10 +149,11 @@ class History : AppCompatActivity() {
         load.visibility = View.GONE
     }
 
-    private fun timeAgo(value: String): String {
-        val od = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
-        od.timeZone = TimeZone.getTimeZone("UTC")
-        val odD: Date = od.parse(value) as Date
-        return SimpleDateFormat("dd.MM.yy h:mm a", Locale.ENGLISH).format(odD)
+    private fun String.timeAgo(): String {
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        simpleDateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        return SimpleDateFormat(
+            "dd.MM.yy h:mm a", Locale.getDefault()
+        ).format(simpleDateFormat.parse(this) as Date)
     }
 }

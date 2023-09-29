@@ -1,9 +1,16 @@
 package com.qrmarker.controller.activities
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.android.volley.Request
@@ -40,7 +47,22 @@ class MainActivity : AppCompatActivity() {
         createForm = findViewById(R.id.create_form)
 
         findViewById<Button>(R.id.log_in).setOnClickListener {
-            if (email.text.isNotEmpty() && password.text.isNotEmpty()) {
+            if (email.text.isEmpty()) {
+                email.requestFocus()
+                email.error = resources.getString(R.string.empty_field_error)
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email.text).matches()) {
+                email.requestFocus()
+                email.error = getString(R.string.invalid_email)
+            }
+
+            if (password.text.isEmpty()) {
+                if (email.error == null) {
+                    password.requestFocus()
+                }
+                password.error = resources.getString(R.string.empty_field_error)
+            }
+
+            if (email.error == null && email.text.isNotEmpty() && password.error == null && password.text.isNotEmpty()) {
                 loadingDialog.show()
                 val jsonObject = JSONObject()
                 jsonObject.put("email", email.text.toString())
@@ -49,10 +71,6 @@ class MainActivity : AppCompatActivity() {
                     this,
                     "logIn", Request.Method.POST, "auth/login", jsonObject, -1
                 )
-            } else {
-                password.requestFocus()
-                password.setSelection(password.text.length)
-                password.error = resources.getString(R.string.empty_field_error)
             }
         }
 
@@ -62,50 +80,48 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.register).setOnClickListener {
-            var error = ""
             if (fullName.text.isEmpty()) {
                 fullName.requestFocus()
                 fullName.error = resources.getString(R.string.empty_field_error)
-                error = getString(R.string.error)
             }
 
-            if (phoneNumber.text.isNotEmpty()) {
-                if (phoneNumber.text.length < 8) {
+            if (phoneNumber.text.isEmpty()) {
+                if (fullName.error == null) {
                     phoneNumber.requestFocus()
-                    phoneNumber.error = getString(R.string.invalid_phone_number)
-                    error = getString(R.string.error)
                 }
-            } else {
-                phoneNumber.requestFocus()
                 phoneNumber.error = resources.getString(R.string.empty_field_error)
-                error = getString(R.string.error)
+            } else if (phoneNumber.text.length < 8) {
+                if (fullName.error == null) {
+                    phoneNumber.requestFocus()
+                }
+                phoneNumber.error = getString(R.string.invalid_phone_number)
             }
 
-            if (createEmail.text.isNotEmpty()) {
-                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(createEmail.text).matches()) {
+            if (createEmail.text.isEmpty()) {
+                if (fullName.error == null && phoneNumber.error == null) {
                     createEmail.requestFocus()
-                    createEmail.error = getString(R.string.invalid_email)
-                    error = getString(R.string.error)
                 }
-            } else {
-                createEmail.requestFocus()
                 createEmail.error = resources.getString(R.string.empty_field_error)
-                error = getString(R.string.error)
-            }
-
-            if (createPassword.text.isNotEmpty()) {
-                if (createPassword.text.length < 8) {
-                    createPassword.requestFocus()
-                    createPassword.error = getString(R.string.weak_password)
-                    error = getString(R.string.error)
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(createEmail.text).matches()) {
+                if (fullName.error == null && phoneNumber.error == null) {
+                    createEmail.requestFocus()
                 }
-            } else {
-                createPassword.requestFocus()
-                createPassword.error = resources.getString(R.string.empty_field_error)
-                error = getString(R.string.error)
+                createEmail.error = getString(R.string.invalid_email)
             }
 
-            if (error == "") {
+            if (createPassword.text.isEmpty()) {
+                if (fullName.error == null && phoneNumber.error == null && createEmail.error == null) {
+                    createPassword.requestFocus()
+                }
+                createPassword.error = resources.getString(R.string.empty_field_error)
+            } else if (createPassword.text.length < 8) {
+                if (fullName.error == null && phoneNumber.error == null && createEmail.error == null) {
+                    createPassword.requestFocus()
+                }
+                createPassword.error = getString(R.string.weak_password)
+            }
+
+            if (fullName.error == null && phoneNumber.error == null && createEmail.error == null && createPassword.error == null) {
                 loadingDialog.show()
                 val jsonObject = JSONObject()
                 jsonObject.put("fullName", fullName.text.toString())
@@ -136,8 +152,8 @@ class MainActivity : AppCompatActivity() {
     fun loggedIn(l: Int, message: String) {
         loadingDialog.dismiss()
         if (l == 1) {
+            hideKeyboard()
             startActivity(Intent(this, Scanner::class.java))
-            Toast.makeText(this, getString(R.string.log_in_successful), Toast.LENGTH_LONG).show()
             finish()
         } else {
             if (message == "") {
@@ -153,9 +169,8 @@ class MainActivity : AppCompatActivity() {
     fun registered(l: Int, message: String) {
         loadingDialog.dismiss()
         if (l == 1) {
+            hideKeyboard()
             startActivity(Intent(this, Scanner::class.java))
-            Toast.makeText(this, getString(R.string.registered_successfully), Toast.LENGTH_LONG)
-                .show()
             finish()
         } else {
             if (message == "") {
@@ -170,5 +185,15 @@ class MainActivity : AppCompatActivity() {
                     .show()
             }
         }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

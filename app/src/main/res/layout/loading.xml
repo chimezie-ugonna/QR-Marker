@@ -6,7 +6,6 @@
     android:padding="@dimen/padding">
 
     <ProgressBar
-        android:id="@+id/loader"
         android:layout_width="@dimen/corner_size"
         android:layout_height="@dimen/corner_size"
         android:layout_gravity="center_vertical"

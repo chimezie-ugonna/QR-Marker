@@ -4,7 +4,12 @@ import android.content.Context
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.qrmarker.controller.activities.*
+import com.qrmarker.controller.activities.History
+import com.qrmarker.controller.activities.MainActivity
+import com.qrmarker.controller.activities.Organizations
+import com.qrmarker.controller.activities.RoomDetails
+import com.qrmarker.controller.activities.Rooms
+import com.qrmarker.controller.activities.UserList
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -15,7 +20,7 @@ class BackEndConnection(
     var extension: String,
     var jsonObject: JSONObject,
     var position: Int,
-    var url: String = "https://qrmarker-api.herokuapp.com/api/v1/"
+    var url: String = "https://qr-maker-384c1b48724e.herokuapp.com/api/v1/"
 ) {
 
     init {
@@ -26,9 +31,6 @@ class BackEndConnection(
                 when (type) {
                     "logIn" -> {
                         if (status in 200..299) {
-                            KeyStore(context).encryptData(
-                                it.getJSONObject("payload").getString("token")
-                            )
                             Session(context).fullName(
                                 it.getJSONObject("payload").getJSONObject("user")
                                     .getString("fullName")
@@ -40,20 +42,26 @@ class BackEndConnection(
                                 it.getJSONObject("payload").getJSONObject("user")
                                     .getString("userType")
                             )
-                            Session(context).phoneNumber(
-                                it.getJSONObject("payload").getJSONObject("user")
-                                    .getString("phoneNumber")
+
+                            if (it.getJSONObject("payload").getJSONObject("user")
+                                    .has("phoneNumber")
+                            ) {
+                                Session(context).phoneNumber(
+                                    it.getJSONObject("payload").getJSONObject("user")
+                                        .getString("phoneNumber")
+                                )
+                            }
+                            KeyStore(context).encryptData(
+                                it.getJSONObject("payload").getString("token")
                             )
                             (context as MainActivity).loggedIn(1, "")
                         } else {
                             (context as MainActivity).loggedIn(-1, "")
                         }
                     }
+
                     "register" -> {
                         if (status in 200..299) {
-                            KeyStore(context).encryptData(
-                                it.getJSONObject("payload").getString("token")
-                            )
                             Session(context).fullName(
                                 it.getJSONObject("payload").getJSONObject("user")
                                     .getString("fullName")
@@ -65,15 +73,23 @@ class BackEndConnection(
                                 it.getJSONObject("payload").getJSONObject("user")
                                     .getString("userType")
                             )
-                            Session(context).phoneNumber(
-                                it.getJSONObject("payload").getJSONObject("user")
-                                    .getString("phoneNumber")
+                            if (it.getJSONObject("payload").getJSONObject("user")
+                                    .has("phoneNumber")
+                            ) {
+                                Session(context).phoneNumber(
+                                    it.getJSONObject("payload").getJSONObject("user")
+                                        .getString("phoneNumber")
+                                )
+                            }
+                            KeyStore(context).encryptData(
+                                it.getJSONObject("payload").getString("token")
                             )
                             (context as MainActivity).registered(1, "")
                         } else {
                             (context as MainActivity).registered(-1, "")
                         }
                     }
+
                     "createOrganization" -> {
                         if (status in 200..299) {
                             (context as Organizations).created(
@@ -85,6 +101,7 @@ class BackEndConnection(
                             (context as Organizations).created(-1, "", "")
                         }
                     }
+
                     "createRoom" -> {
                         if (status in 200..299) {
                             (context as Rooms).created(
@@ -97,6 +114,7 @@ class BackEndConnection(
                             (context as Rooms).created(-1, "", "", "")
                         }
                     }
+
                     "deleteOrganization" -> {
                         if (status in 200..299) {
                             (context as Organizations).deleted(1, position)
@@ -104,6 +122,7 @@ class BackEndConnection(
                             (context as Organizations).deleted(-1, position)
                         }
                     }
+
                     "assignUser" -> {
                         if (status in 200..299) {
                             (context as UserList).assigned(1)
@@ -111,6 +130,7 @@ class BackEndConnection(
                             (context as UserList).assigned(-1)
                         }
                     }
+
                     "deleteRoom" -> {
                         if (status in 200..299) {
                             (context as Rooms).deleted(1, position)
@@ -118,6 +138,7 @@ class BackEndConnection(
                             (context as Rooms).deleted(-1, position)
                         }
                     }
+
                     "getAllUsers" -> {
                         if (status in 200..299) {
                             (context as UserList).gotten(
@@ -128,6 +149,7 @@ class BackEndConnection(
                             (context as UserList).gotten(-1, JSONArray(), JSONObject())
                         }
                     }
+
                     "getAllOrganization" -> {
                         if (status in 200..299) {
                             (context as Organizations).gotten(
@@ -138,6 +160,7 @@ class BackEndConnection(
                             (context as Organizations).gotten(-1, JSONArray())
                         }
                     }
+
                     "getHistory" -> {
                         if (status in 200..299) {
                             try {
@@ -155,6 +178,7 @@ class BackEndConnection(
                             (context as History).gotten(-1, JSONArray())
                         }
                     }
+
                     "getAssignedUser" -> {
                         if (status in 200..299) {
                             try {
@@ -174,6 +198,7 @@ class BackEndConnection(
                             (context as UserList).gotten(-1, JSONArray(), JSONObject())
                         }
                     }
+
                     "removeAssignee" -> {
                         if (status in 200..299) {
                             (context as UserList).removed(1)
@@ -181,6 +206,7 @@ class BackEndConnection(
                             (context as UserList).removed(-1)
                         }
                     }
+
                     "getSpecificOrganization" -> {
                         if (status in 200..299) {
                             (context as Rooms).gotten(
@@ -191,6 +217,7 @@ class BackEndConnection(
                             (context as Rooms).gotten(-1, JSONArray())
                         }
                     }
+
                     "getSpecificRoom" -> {
                         if (status in 200..299) {
                             (context as RoomDetails).gotten(
@@ -205,6 +232,7 @@ class BackEndConnection(
                             (context as RoomDetails).gotten(-1, "", "", "", "", "")
                         }
                     }
+
                     "verifyRoom", "unverifyRoom" -> {
                         if (status in 200..299) {
                             if (context is RoomDetails) {
@@ -227,45 +255,59 @@ class BackEndConnection(
                     "logIn" -> {
                         (context as MainActivity).loggedIn(-1, "")
                     }
+
                     "register" -> {
                         (context as MainActivity).registered(-1, "")
                     }
+
                     "createOrganization" -> {
                         (context as Organizations).created(-1, "", "")
                     }
+
                     "createRoom" -> {
                         (context as Rooms).created(-1, "", "", "")
                     }
+
                     "assignUser" -> {
                         (context as UserList).assigned(-1)
                     }
+
                     "deleteOrganization" -> {
                         (context as Organizations).deleted(-1, position)
                     }
+
                     "deleteRoom" -> {
                         (context as Rooms).deleted(-1, position)
                     }
+
                     "getAllUsers" -> {
                         (context as UserList).gotten(-1, JSONArray(), JSONObject())
                     }
+
                     "getAllOrganization" -> {
                         (context as Organizations).gotten(-1, JSONArray())
                     }
+
                     "getHistory" -> {
                         (context as History).gotten(-1, JSONArray())
                     }
+
                     "getAssignedUser" -> {
                         (context as UserList).gotten(-1, JSONArray(), JSONObject())
                     }
+
                     "removeAssignee" -> {
                         (context as UserList).removed(-1)
                     }
+
                     "getSpecificOrganization" -> {
                         (context as Rooms).gotten(-1, JSONArray())
                     }
+
                     "getSpecificRoom" -> {
                         (context as RoomDetails).gotten(-1, "", "", "", "", "")
                     }
+
                     "verifyRoom", "unverifyRoom" -> {
                         if (context is RoomDetails) {
                             (context as RoomDetails).updated(-1)
@@ -285,45 +327,59 @@ class BackEndConnection(
                 "logIn" -> {
                     (context as MainActivity).loggedIn(-1, message)
                 }
+
                 "register" -> {
                     (context as MainActivity).registered(-1, message)
                 }
+
                 "createOrganization" -> {
                     (context as Organizations).created(-1, "", "")
                 }
+
                 "createRoom" -> {
                     (context as Rooms).created(-1, "", "", "")
                 }
+
                 "assignUser" -> {
                     (context as UserList).assigned(-1)
                 }
+
                 "deleteOrganization" -> {
                     (context as Organizations).deleted(-1, position)
                 }
+
                 "deleteRoom" -> {
                     (context as Rooms).deleted(-1, position)
                 }
+
                 "getAllUsers" -> {
                     (context as UserList).gotten(-1, JSONArray(), JSONObject())
                 }
+
                 "getAllOrganization" -> {
                     (context as Organizations).gotten(-1, JSONArray())
                 }
+
                 "getHistory" -> {
                     (context as History).gotten(-1, JSONArray())
                 }
+
                 "getAssignedUser" -> {
                     (context as UserList).gotten(-1, JSONArray(), JSONObject())
                 }
+
                 "removeAssignee" -> {
                     (context as UserList).removed(-1)
                 }
+
                 "getSpecificOrganization" -> {
                     (context as Rooms).gotten(-1, JSONArray())
                 }
+
                 "getSpecificRoom" -> {
                     (context as RoomDetails).gotten(-1, "", "", "", "", "")
                 }
+
                 "verifyRoom", "unverifyRoom" -> {
                     if (context is RoomDetails) {
                         (context as RoomDetails).updated(-1)

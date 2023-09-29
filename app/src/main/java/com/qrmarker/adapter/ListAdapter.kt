@@ -5,7 +5,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +22,7 @@ import com.qrmarker.controller.activities.UserList
 import com.qrmarker.models.BackEndConnection
 import com.qrmarker.models.Session
 import org.json.JSONObject
+import java.util.Locale
 
 class ListAdapter(
     private val context: Context,
@@ -83,7 +88,7 @@ class ListAdapter(
             }
         }
         if (context is Organizations) {
-            holder.name.text = names[holder.adapterPosition].replaceFirstChar { it.uppercase() }
+            holder.name.text = capitalize(names[holder.adapterPosition])
             holder.status.visibility = View.GONE
             holder.status.text = ""
             if (Session(context).userType() == "user") {
@@ -94,14 +99,12 @@ class ListAdapter(
                 if (context.type != "") {
                     holder.details.visibility = View.VISIBLE
                     holder.normal.visibility = View.GONE
-                    holder.fullName.text =
-                        names[holder.adapterPosition].replaceFirstChar { it.uppercase() }
+                    holder.fullName.text = capitalize(names[holder.adapterPosition])
                     holder.email.text = emails?.get(holder.adapterPosition) ?: ""
                     holder.type.text = types?.get(holder.adapterPosition) ?: ""
                     holder.phoneNumber.text = phoneNumbers?.get(holder.adapterPosition) ?: ""
                 } else {
-                    holder.name.text =
-                        names[holder.adapterPosition].replaceFirstChar { it.uppercase() }
+                    holder.name.text = capitalize(names[holder.adapterPosition])
                     holder.details.visibility = View.GONE
                     holder.normal.visibility = View.VISIBLE
                     holder.status.visibility = View.VISIBLE
@@ -117,7 +120,7 @@ class ListAdapter(
                         holder.box.visibility = View.GONE
                     }
                 }
-                holder.name.text = names[holder.adapterPosition].replaceFirstChar { it.uppercase() }
+                holder.name.text = capitalize(names[holder.adapterPosition])
                 holder.status.visibility = View.VISIBLE
 
                 if (context is History) {
@@ -164,6 +167,7 @@ class ListAdapter(
                         )
                     }
                 }
+
                 is Organizations -> {
                     dialog.setTitle(context.resources.getString(R.string.delete_org))
                     dialog.setMessage(context.resources.getString(R.string.delete_org_confirm))
@@ -179,6 +183,7 @@ class ListAdapter(
                         )
                     }
                 }
+
                 is Rooms -> {
                     dialog.setTitle(context.resources.getString(R.string.delete_room))
                     dialog.setMessage(context.resources.getString(R.string.delete_room_confirm))
@@ -219,5 +224,15 @@ class ListAdapter(
         var phoneNumber: TextView = v.findViewById(R.id.phone_number)
         var box: CheckBox = v.findViewById(R.id.box)
         var info: ImageView = v.findViewById(R.id.info)
+    }
+
+    private fun capitalize(str: String): String {
+        return str.lowercase().trim().split("\\s+".toRegex()).joinToString(" ") {
+            it.replaceFirstChar { it1 ->
+                if (it1.isLowerCase()) it1.titlecase(
+                    Locale.getDefault()
+                ) else it1.toString()
+            }
+        }
     }
 }

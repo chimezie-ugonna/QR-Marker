@@ -20,7 +20,7 @@ import com.qrmarker.models.LoadingDialog
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
+import java.util.Objects
 
 class UserList : AppCompatActivity() {
     lateinit var loadingDialog: LoadingDialog
@@ -112,17 +112,17 @@ class UserList : AppCompatActivity() {
         }
     }
 
-    fun gotten(i: Int, jsonArray: JSONArray, jsonObject_: JSONObject?) {
+    fun gotten(i: Int, jsonArray: JSONArray, jsonObject: JSONObject?) {
         when (i) {
             1 -> {
                 if (type != "") {
-                    names.add("${jsonObject_?.getString("fullName")}")
-                    ids.add("${jsonObject_?.getString("_id")}")
-                    statuses.add("${jsonObject_?.getString("email")}")
-                    emails.add("${jsonObject_?.getString("email")}")
-                    types.add("${jsonObject_?.getString("userType")}")
+                    names.add("${jsonObject?.getString("fullName")}")
+                    ids.add("${jsonObject?.getString("_id")}")
+                    statuses.add("${jsonObject?.getString("email")}")
+                    emails.add("${jsonObject?.getString("email")}")
+                    types.add("${jsonObject?.getString("userType")}")
                     try {
-                        phoneNumbers.add("${jsonObject_?.getString("phoneNumber")}")
+                        phoneNumbers.add("${jsonObject?.getString("phoneNumber")}")
                     } catch (e: JSONException) {
                         phoneNumbers.add("")
                     }
@@ -132,14 +132,14 @@ class UserList : AppCompatActivity() {
                 } else {
                     if (jsonArray.length() > 0) {
                         for (j in 0 until jsonArray.length()) {
-                            val jsonObject = jsonArray.getJSONObject(j)
-                            names.add(jsonObject.getString("fullName"))
-                            ids.add(jsonObject.getString("_id"))
-                            statuses.add(jsonObject.getString("email"))
-                            emails.add(jsonObject.getString("email"))
-                            types.add(jsonObject.getString("userType"))
+                            val jsonObject2 = jsonArray.getJSONObject(j)
+                            names.add(jsonObject2.getString("fullName"))
+                            ids.add(jsonObject2.getString("_id"))
+                            statuses.add(jsonObject2.getString("email"))
+                            emails.add(jsonObject2.getString("email"))
+                            types.add(jsonObject2.getString("userType"))
                             try {
-                                phoneNumbers.add(jsonObject.getString("phoneNumber"))
+                                phoneNumbers.add(jsonObject2.getString("phoneNumber"))
                             } catch (e: JSONException) {
                                 phoneNumbers.add("")
                             }
@@ -157,11 +157,13 @@ class UserList : AppCompatActivity() {
                 la = ListAdapter(this, names, statuses, ids, emails, types, phoneNumbers)
                 list.adapter = la
             }
+
             2 -> {
                 list.visibility = View.GONE
                 empty.visibility = View.VISIBLE
                 error.visibility = View.GONE
             }
+
             else -> {
                 list.visibility = View.GONE
                 empty.visibility = View.GONE

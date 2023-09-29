@@ -130,6 +130,7 @@ class Rooms : AppCompatActivity() {
                                 }
                             }
                     }
+
                     R.id.select_room -> {
                         selectedRooms = ArrayList()
                         selectedRoomsPositions = ArrayList()
@@ -137,11 +138,13 @@ class Rooms : AppCompatActivity() {
                         la.notifyDataSetChanged()
                         actions.visibility = View.VISIBLE
                     }
+
                     R.id.assign -> {
                         val i = Intent(this, UserList::class.java)
                         i.putExtra("organizationId", organizationId)
                         startActivity(i)
                     }
+
                     R.id.view_assignees -> {
                         val i = Intent(this, UserList::class.java)
                         i.putExtra("organizationId", organizationId)
